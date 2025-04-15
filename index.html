@@ -39,8 +39,8 @@
       width: 90px;
       height: 90px;
       border-radius: 50px;
-  box-shadow: 0 0 10px 4px rgba(0, 255, 255, 0.7);
-  margin-bottom: 30px;
+      box-shadow: 0 0 10px 4px rgba(0, 255, 255, 0.7);
+      margin-bottom: 30px;
     }
     .video-container {
       position: relative;
@@ -81,10 +81,6 @@
       justify-content: center;
       cursor: pointer;
     }
-    #global-loading {
-      background: rgba(0,0,0,0.9);
-      z-index: 1000;
-    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -123,14 +119,6 @@
     </center>
   </div>
 
-  <!-- Loading Overlay -->
-  <div id="global-loading" class="fixed inset-0 flex items-center justify-center">
-    <div class="text-center space-y-4">
-      <div class="w-12 h-12 border-4 rounded-full animate-spin"></div>
-      <p class="text-blue-500">Loading streaming..</p>
-    </div>
-  </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const config = {
@@ -141,7 +129,6 @@
       };
 
       const video = document.getElementById('live-video');
-      const globalLoading = document.getElementById('global-loading');
       const playPauseBtn = document.getElementById('play-pause');
       const volumeBtn = document.getElementById('volume');
       const volumeSlider = document.getElementById('volume-slider');
@@ -151,8 +138,6 @@
       let isPlaying = true;
 
       function initPlayer() {
-        globalLoading.style.display = 'flex';
-
         if (Hls.isSupported()) {
           if (hls) hls.destroy();
 
@@ -166,7 +151,6 @@
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            globalLoading.style.display = 'none';
             retryCount = 0;
             video.play().catch(err => {
               console.log('Autoplay prevented:', err);
@@ -186,11 +170,9 @@
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           video.src = config.streamUrl;
           video.addEventListener('loadedmetadata', () => {
-            globalLoading.style.display = 'none';
             video.play();
           });
         } else {
-          globalLoading.style.display = 'none';
           console.error('Your browser does not support live streaming.');
         }
       }
