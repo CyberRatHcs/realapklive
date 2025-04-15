@@ -45,7 +45,7 @@
     .video-container {
       position: relative;
       width: 100%;
-      background: #0000;
+      background: #000;
       min-height: 250px;
       border-radius: 10px;
     }
@@ -81,6 +81,13 @@
       justify-content: center;
       cursor: pointer;
     }
+    .loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -107,9 +114,11 @@
           <i class="fas fa-expand"></i>
         </button>
       </div>
+      <div id="loading-spinner" class="loading-spinner hidden">
+        <div class="w-12 h-12 border-4 border-blue-500 rounded-full animate-spin"></div>
+      </div>
     </div>
-<div>
-</div>
+
     <center class="mt-4">
       <a href="https://t.me/+ylnL4bR-7gg5ZTA1" target="_blank" 
          class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full inline-flex items-center gap-2">
@@ -133,11 +142,22 @@
       const volumeBtn = document.getElementById('volume');
       const volumeSlider = document.getElementById('volume-slider');
       const fullscreenBtn = document.getElementById('fullscreen');
+      const loadingSpinner = document.getElementById('loading-spinner');
       let hls = null;
       let retryCount = 0;
       let isPlaying = true;
 
+      function showLoading() {
+        loadingSpinner.classList.remove('hidden');
+      }
+
+      function hideLoading() {
+        loadingSpinner.classList.add('hidden');
+      }
+
       function initPlayer() {
+        showLoading();
+
         if (Hls.isSupported()) {
           if (hls) hls.destroy();
 
@@ -151,29 +171,52 @@
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            hideLoading();
             retryCount = 0;
             video.play().catch(err => {
               console.log('Autoplay prevented:', err);
-              playPauseBtn.click(); // Show play button if autoplay fails
+              playPauseBtn.click();
             });
           });
 
           hls.on(Hls.Events.ERROR, (event, data) => {
+            console.error('HLS Error:', data);
             if (data.fatal) {
-              if (retryCount < config.maxRetries) {
-                retryCount++;
-                const delay = config.retryDelay * Math.pow(2, retryCount);
-                setTimeout(initPlayer, delay);
+              switch(data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  if (retryCount < config.maxRetries) {
+                    retryCount++;
+                    const delay = config.retryDelay * Math.pow(2, retryCount);
+                    console.log(`Retrying in ${delay}ms...`);
+                    setTimeout(initPlayer, delay);
+                  } else {
+                    hideLoading();
+                    alert('Failed to load stream after multiple attempts. Please try again later.');
+                  }
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  hls.recoverMediaError();
+                  break;
+                default:
+                  initPlayer();
+                  break;
               }
             }
           });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // For Safari
           video.src = config.streamUrl;
           video.addEventListener('loadedmetadata', () => {
+            hideLoading();
             video.play();
           });
+          video.addEventListener('error', () => {
+            hideLoading();
+            alert('Error loading the video stream. Please try again.');
+          });
         } else {
-          console.error('Your browser does not support live streaming.');
+          hideLoading();
+          alert('Your browser does not support HLS streaming. Please try a different browser.');
         }
       }
 
@@ -210,7 +253,9 @@
       // Fullscreen control
       fullscreenBtn.addEventListener('click', () => {
         if (!document.fullscreenElement) {
-          video.parentElement.requestFullscreen();
+          video.parentElement.requestFullscreen().catch(err => {
+            console.log('Fullscreen error:', err);
+          });
         } else {
           document.exitFullscreen();
         }
@@ -218,6 +263,13 @@
 
       // Initialize player
       initPlayer();
+
+      // Handle network status changes
+      window.addEventListener('online', () => {
+        if (!video.src && retryCount < config.maxRetries) {
+          initPlayer();
+        }
+      });
     });
   </script>
 </body>
