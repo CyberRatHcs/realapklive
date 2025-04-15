@@ -48,11 +48,39 @@
       background: #000;
       min-height: 250px;
       border-radius: 10px;
+      padding: 3px; /* For neon border */
+    }
+    .video-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 10px;
+      padding: 3px;
+      background: linear-gradient(45deg, #00bcd4, #0069c0, #00bcd4);
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: neon-border 2s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes neon-border {
+      0% {
+        filter: hue-rotate(0deg) brightness(1);
+      }
+      100% {
+        filter: hue-rotate(360deg) brightness(1.2);
+      }
     }
     .video-player {
       width: 100%;
       height: 100%;
       aspect-ratio: 16/9;
+      border-radius: 8px; /* Slightly smaller than container */
     }
     .controls {
       position: absolute;
@@ -66,6 +94,7 @@
       gap: 8px;
       opacity: 0;
       transition: opacity 0.3s;
+      z-index: 2;
     }
     .video-container:hover .controls {
       opacity: 1;
@@ -80,13 +109,30 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      color: white;
+      transition: all 0.2s;
+    }
+    .control-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
     }
     .loading-spinner {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      z-index: 10;
+      z-index: 1;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 188, 212, 0.3);
+      border-radius: 50%;
+      border-top-color: #00bcd4;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -103,19 +149,20 @@
     <div class="video-container shadow-xl">
       <video id="live-video" class="video-player" autoplay playsinline></video>
       <div class="controls">
-        <button id="play-pause" class="control-btn text-white">
+        <button id="play-pause" class="control-btn">
           <i class="fas fa-pause"></i>
         </button>
         <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1" class="w-20">
-        <button id="volume" class="control-btn text-white">
+        <button id="volume" class="control-btn">
           <i class="fas fa-volume-up"></i>
         </button>
-        <button id="fullscreen" class="control-btn text-white">
+        <button id="fullscreen" class="control-btn">
           <i class="fas fa-expand"></i>
         </button>
       </div>
-      <div id="loading-spinner" class="loading-spinner hidden">
-        <div class="w-12 h-12 border-4 border-blue-500 rounded-full animate-spin"></div>
+      <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p class="text-center mt-2 text-blue-400">Loading stream...</p>
       </div>
     </div>
 
@@ -133,7 +180,7 @@
       const config = {
         streamUrl: 'https://user65873.hls-video.net/hls/token/a3f0c81db39d64f85b6f6a5cfaa1b2ce/stream.m3u8',
         autoPlay: true,
-        maxRetries: 3,
+        maxRetries: 5,
         retryDelay: 3000
       };
 
@@ -148,23 +195,27 @@
       let isPlaying = true;
 
       function showLoading() {
-        loadingSpinner.classList.remove('hidden');
+        loadingSpinner.style.display = 'block';
       }
 
       function hideLoading() {
-        loadingSpinner.classList.add('hidden');
+        loadingSpinner.style.display = 'none';
       }
 
       function initPlayer() {
         showLoading();
 
+        // First try with HLS.js
         if (Hls.isSupported()) {
           if (hls) hls.destroy();
 
           hls = new Hls({
             enableWorker: true,
             lowLatencyMode: true,
-            backBufferLength: 1
+            backBufferLength: 1,
+            maxBufferLength: 30,
+            maxMaxBufferLength: 60,
+            startLevel: -1, // Auto quality
           });
 
           hls.loadSource(config.streamUrl);
@@ -203,29 +254,38 @@
               }
             }
           });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          // For Safari
+        } 
+        // Fallback for Safari and other browsers with native HLS support
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           video.src = config.streamUrl;
           video.addEventListener('loadedmetadata', () => {
             hideLoading();
-            video.play();
+            video.play().catch(err => {
+              console.log('Autoplay prevented:', err);
+              playPauseBtn.click();
+            });
           });
           video.addEventListener('error', () => {
             hideLoading();
             alert('Error loading the video stream. Please try again.');
           });
-        } else {
+        } 
+        // No HLS support
+        else {
           hideLoading();
-          alert('Your browser does not support HLS streaming. Please try a different browser.');
+          alert('Your browser does not support HLS streaming. Please try Chrome, Firefox, or Edge.');
         }
       }
 
       // Play/Pause control
       playPauseBtn.addEventListener('click', () => {
         if (video.paused) {
-          video.play();
-          playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-          isPlaying = true;
+          video.play().then(() => {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            isPlaying = true;
+          }).catch(err => {
+            console.log('Play failed:', err);
+          });
         } else {
           video.pause();
           playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -270,7 +330,13 @@
           initPlayer();
         }
       });
+
+      // Show controls when video is clicked
+      video.addEventListener('click', () => {
+        const controls = document.querySelector('.controls');
+        controls.style.opacity = controls.style.opacity === '1' ? '0' : '1';
+      });
     });
   </script>
 </body>
-</html>
+</html>aa
