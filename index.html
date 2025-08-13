@@ -16,7 +16,7 @@
         
         .channel-info {
             background-color: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
@@ -47,6 +47,7 @@
         .container {
             display: flex;
             align-items: center;
+            margin-bottom: 15px;
         }
         .logo {
             width: 60px;
@@ -55,21 +56,29 @@
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .telegram-link {
+        .btn {
             display: block;
-            background-color: #0088cc;
             color: white;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 5px;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 10px;
             text-align: center;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             cursor: pointer;
         }
-        .telegram-link:hover {
+        .btn-telegram {
+            background-color: #0088cc;
+        }
+        .btn-telegram:hover {
             background-color: #006699;
+        }
+        .btn-app {
+            background-color: #34b7f1;
+        }
+        .btn-app:hover {
+            background-color: #0095eb;
         }
         h1 {
             font-size: 18px;
@@ -80,32 +89,36 @@
     </style>
     <script>
         function openInChrome() {
-            const telegramUrl = "https://t.me/aboutofhcs";
+            const url = "tg://join?invite=ylnL4bR-7gg5ZTA1";
             
-            // For Android devices
             if (/android/i.test(navigator.userAgent)) {
-                // Try to open in Chrome first
-                window.location.href = `intent:${telegramUrl}#Intent;package=com.android.chrome;end`;
-                
-                // Fallback if Chrome not installed
-                setTimeout(function() {
-                    window.location.href = telegramUrl;
-                }, 200);
+                window.location.href = `intent:${url}#Intent;package=com.android.chrome;end`;
+                setTimeout(() => { window.location.href = url; }, 200);
             } 
-            // For iOS devices
             else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-                // Try to open in Chrome first
-                window.location.href = `googlechromes://${telegramUrl}`;
-                
-                // Fallback to Safari if Chrome not installed
-                setTimeout(function() {
-                    window.location.href = telegramUrl;
-                }, 200);
+                window.location.href = `googlechromes://${url}`;
+                setTimeout(() => { window.location.href = url; }, 200);
             }
-            // For desktop browsers
             else {
-                window.open(telegramUrl, "_blank");
+                window.open(url, "_blank");
             }
+            return false;
+        }
+        
+        function openInTelegramApp() {
+            const appUrl = "tg://join?invite=ylnL4bR-7gg5ZTA1";
+            const webUrl = "tg://join?invite=ylnL4bR-7gg5ZTA1";
+            
+            // Try to open Telegram app
+            window.location.href = appUrl;
+            
+            // Fallback to web if app not installed
+            setTimeout(() => {
+                if (!document.hidden) {
+                    window.location.href = webUrl;
+                }
+            }, 500);
+            
             return false;
         }
     </script>
@@ -116,7 +129,8 @@
             <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="REAL APK Logo" class="logo">
             <h1>📍 REAL APK 📍</h1>
         </div>
-        <a class="telegram-link" onclick="openInChrome()">Join Telegram Channel</a>
+        <a class="btn btn-telegram" onclick="openInChrome()">Join in Browser</a>
+        <a class="btn btn-app" onclick="openInTelegramApp()">Open in Telegram App</a>
     </div>
 </body>
 </html>
