@@ -55,22 +55,41 @@
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .telegram-link {
+        
+        /* Modded button style */
+        .modded-by {
             display: block;
-            background-color: #0088cc;
-            color: white;
+            background-color: #1e1e1e;
+            color: #ffffff;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 5px;
             font-weight: bold;
             margin-top: 15px;
             text-align: center;
-            transition: background-color 0.3s;
-            cursor: pointer;
+            cursor: default;
+            position: relative;
+            border: none;
+            overflow: hidden;
         }
-        .telegram-link:hover {
-            background-color: #006699;
+        
+        /* Neon border for the button */
+        .modded-by::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 7px;
+            background: linear-gradient(45deg, 
+                #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 400%;
+            z-index: -1;
+            animation: neonBorder 8s linear infinite;
+            filter: blur(1px);
         }
+        
         h1 {
             font-size: 18px;
             color: #333;
@@ -78,24 +97,6 @@
             font-weight: bold;
         }
     </style>
-    <script>
-        function openTelegram() {
-            const appUrl = "tg://join?invite=ylnL4bR-7gg5ZTA1";
-            const webUrl = "https://t.me/aboutofhcs";
-            
-            // Try to open Telegram app directly
-            window.location.href = appUrl;
-            
-            // Fallback to web version if app not installed
-            setTimeout(function() {
-                if (!document.hidden) {
-                    window.location.href = webUrl;
-                }
-            }, 500);
-            
-            return false;
-        }
-    </script>
 </head>
 <body>
     <div class="channel-info">
@@ -103,7 +104,7 @@
             <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="REAL APK Logo" class="logo">
             <h1>📍 REAL APK 📍</h1>
         </div>
-        <a class="telegram-link" onclick="openTelegram()">Join Telegram Channel</a>
+        <div class="modded-by">MODDED BY REAL APK</div>
     </div>
 </body>
 </html>
