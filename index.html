@@ -80,24 +80,22 @@
     </style>
     <script>
         function openInChrome() {
-            // Force open in browser by using the web version URL
-            const url = "https://t.me/+XV_ACs3IWgoxMmI1";
-            
-            // For Android devices
+            // Use intent URL for Android to force Chrome
             if (/android/i.test(navigator.userAgent)) {
-                window.open(url, "_blank");
-                return false;
-            }
-            // For iOS devices
+                window.location.href = "intent://telegram.dog/RealApk#Intent;scheme=https;package=com.android.chrome;end";
+            } 
+            // For iOS, use the web URL with Chrome scheme
             else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-                window.open(url, "_blank");
-                return false;
+                window.location.href = "googlechromes://telegram.dog/RealApk";
+                setTimeout(function() {
+                    window.location.href = "https://t.me/+XV_ACs3IWgoxMmI1";
+                }, 1000);
             }
-            // For desktop browsers
+            // Fallback for other devices
             else {
-                window.open(url, "_blank");
-                return false;
+                window.open("https://t.me/+XV_ACs3IWgoxMmI1", "_blank");
             }
+            return false;
         }
     </script>
 </head>
