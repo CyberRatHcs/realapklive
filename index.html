@@ -1,342 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Live IPL Match</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #121212;
-      color: #f5f5f5;
-      overflow-x: hidden;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding: 15px;
-      background: linear-gradient(45deg, #00bcd4, #0069c0);
-      width: 90%;
-      max-width: 850px;
-      color: #ffffff;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-    }
-    header h1 {
-      font-size: 20px;
-      font-weight: 400;
-    }
-    .logo {
-      margin-top: 10px;
-      width: 90px;
-      height: 90px;
-      border-radius: 50px;
-      box-shadow: 0 0 10px 4px rgba(0, 255, 255, 0.7);
-      margin-bottom: 30px;
-    }
-    .video-container {
-      position: relative;
-      width: 100%;
-      background: #000;
-      min-height: 250px;
-      border-radius: 10px;
-      padding: 3px; /* For neon border */
-    }
-    .video-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 10px;
-      padding: 3px;
-      background: linear-gradient(45deg, #00bcd4, #0069c0, #00bcd4);
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: neon-border 2s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes neon-border {
-      0% {
-        filter: hue-rotate(0deg) brightness(1);
-      }
-      100% {
-        filter: hue-rotate(360deg) brightness(1.2);
-      }
-    }
-    .video-player {
-      width: 100%;
-      height: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 8px; /* Slightly smaller than container */
-    }
-    .controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 2;
-    }
-    .video-container:hover .controls {
-      opacity: 1;
-    }
-    .control-btn {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: white;
-      transition: all 0.2s;
-    }
-    .control-btn:hover {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.1);
-    }
-    .loading-spinner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-    }
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(0, 188, 212, 0.3);
-      border-radius: 50%;
-      border-top-color: #00bcd4;
-      animation: spin 1s ease-in-out infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Apk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #f5f5f5;
+            min-height: 150px;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .channel-info {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .telegram-link {
+            display: block;
+            background-color: #0088cc;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .telegram-link:hover {
+            background-color: #006699;
+        }
+        h1 {
+            font-size: 18px;
+            color: #333;
+            margin: 0;
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
-  <div class="navbar">
-    <img src="logo.jpg" class="logo" alt="Website Logo">
-  </div>
-  <header>
-    <h1>WELCOME TO REAL APK</h1>
-    <h4>We appreciate you! Thank you for being a part of our online community!</h4>
-  </header>
-
-  <div class="container mx-auto p-4" style="max-width: 900px;">
-    <div class="video-container shadow-xl">
-      <video id="live-video" class="video-player" autoplay playsinline></video>
-      <div class="controls">
-        <button id="play-pause" class="control-btn">
-          <i class="fas fa-pause"></i>
-        </button>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1" class="w-20">
-        <button id="volume" class="control-btn">
-          <i class="fas fa-volume-up"></i>
-        </button>
-        <button id="fullscreen" class="control-btn">
-          <i class="fas fa-expand"></i>
-        </button>
-      </div>
-      <div id="loading-spinner" class="loading-spinner">
-        <div class="spinner"></div>
-        <p class="text-center mt-2 text-blue-400">Loading stream...</p>
-      </div>
+<body>
+    <div class="channel-info">
+        <div class="container">
+            <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="Real APK Logo" class="logo">
+            <h1>Real Apk</h1>
+        </div>
+        <a href="https://t.me/+XV_ACs3IWgoxMmI1" class="telegram-link">Join Telegram Channel</a>
     </div>
-
-    <center class="mt-4">
-      <a href="https://t.me/+ylnL4bR-7gg5ZTA1" target="_blank" 
-         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full inline-flex items-center gap-2">
-        <i class="fab fa-telegram"></i>
-        Join Telegram Channel
-      </a>
-    </center>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const config = {
-        streamUrl: 'https://user65873.hls-video.net/hls/token/a3f0c81db39d64f85b6f6a5cfaa1b2ce/stream.m3u8',
-        autoPlay: true,
-        maxRetries: 5,
-        retryDelay: 3000
-      };
-
-      const video = document.getElementById('live-video');
-      const playPauseBtn = document.getElementById('play-pause');
-      const volumeBtn = document.getElementById('volume');
-      const volumeSlider = document.getElementById('volume-slider');
-      const fullscreenBtn = document.getElementById('fullscreen');
-      const loadingSpinner = document.getElementById('loading-spinner');
-      let hls = null;
-      let retryCount = 0;
-      let isPlaying = true;
-
-      function showLoading() {
-        loadingSpinner.style.display = 'block';
-      }
-
-      function hideLoading() {
-        loadingSpinner.style.display = 'none';
-      }
-
-      function initPlayer() {
-        showLoading();
-
-        // First try with HLS.js
-        if (Hls.isSupported()) {
-          if (hls) hls.destroy();
-
-          hls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 1,
-            maxBufferLength: 30,
-            maxMaxBufferLength: 60,
-            startLevel: -1, // Auto quality
-          });
-
-          hls.loadSource(config.streamUrl);
-          hls.attachMedia(video);
-
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            hideLoading();
-            retryCount = 0;
-            video.play().catch(err => {
-              console.log('Autoplay prevented:', err);
-              playPauseBtn.click();
-            });
-          });
-
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            console.error('HLS Error:', data);
-            if (data.fatal) {
-              switch(data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR:
-                  if (retryCount < config.maxRetries) {
-                    retryCount++;
-                    const delay = config.retryDelay * Math.pow(2, retryCount);
-                    console.log(`Retrying in ${delay}ms...`);
-                    setTimeout(initPlayer, delay);
-                  } else {
-                    hideLoading();
-                    alert('Failed to load stream after multiple attempts. Please try again later.');
-                  }
-                  break;
-                case Hls.ErrorTypes.MEDIA_ERROR:
-                  hls.recoverMediaError();
-                  break;
-                default:
-                  initPlayer();
-                  break;
-              }
-            }
-          });
-        } 
-        // Fallback for Safari and other browsers with native HLS support
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = config.streamUrl;
-          video.addEventListener('loadedmetadata', () => {
-            hideLoading();
-            video.play().catch(err => {
-              console.log('Autoplay prevented:', err);
-              playPauseBtn.click();
-            });
-          });
-          video.addEventListener('error', () => {
-            hideLoading();
-            alert('Error loading the video stream. Please try again.');
-          });
-        } 
-        // No HLS support
-        else {
-          hideLoading();
-          alert('Your browser does not support HLS streaming. Please try Chrome, Firefox, or Edge.');
-        }
-      }
-
-      // Play/Pause control
-      playPauseBtn.addEventListener('click', () => {
-        if (video.paused) {
-          video.play().then(() => {
-            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            isPlaying = true;
-          }).catch(err => {
-            console.log('Play failed:', err);
-          });
-        } else {
-          video.pause();
-          playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-          isPlaying = false;
-        }
-      });
-
-      // Volume control
-      volumeBtn.addEventListener('click', () => {
-        video.muted = !video.muted;
-        volumeBtn.innerHTML = video.muted ? 
-          '<i class="fas fa-volume-mute"></i>' : 
-          '<i class="fas fa-volume-up"></i>';
-        volumeSlider.value = video.muted ? 0 : video.volume;
-      });
-
-      volumeSlider.addEventListener('input', (e) => {
-        video.volume = e.target.value;
-        video.muted = e.target.value == 0;
-        volumeBtn.innerHTML = video.muted ? 
-          '<i class="fas fa-volume-mute"></i>' : 
-          '<i class="fas fa-volume-up"></i>';
-      });
-
-      // Fullscreen control
-      fullscreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-          video.parentElement.requestFullscreen().catch(err => {
-            console.log('Fullscreen error:', err);
-          });
-        } else {
-          document.exitFullscreen();
-        }
-      });
-
-      // Initialize player
-      initPlayer();
-
-      // Handle network status changes
-      window.addEventListener('online', () => {
-        if (!video.src && retryCount < config.maxRetries) {
-          initPlayer();
-        }
-      });
-
-      // Show controls when video is clicked
-      video.addEventListener('click', () => {
-        const controls = document.querySelector('.controls');
-        controls.style.opacity = controls.style.opacity === '1' ? '0' : '1';
-      });
-    });
-  </script>
 </body>
-</html>aa
+</html>
