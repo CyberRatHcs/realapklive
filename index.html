@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Apk</title>
+    <title>📍 REAL APK 📍</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,35 @@
             padding: 10px;
             background-color: #f5f5f5;
             min-height: 150px;
+            position: relative;
+            overflow-x: hidden;
         }
+        
+        /* Neon side borders */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background: linear-gradient(180deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 400%;
+            animation: neonBorder 8s linear infinite;
+            z-index: -1;
+            filter: blur(2px);
+        }
+        body::before {
+            left: 0;
+        }
+        body::after {
+            right: 0;
+        }
+        
+        @keyframes neonBorder {
+            0% { background-position: 0%; }
+            100% { background-position: 400%; }
+        }
+        
         .container {
             display: flex;
             align-items: center;
@@ -29,6 +57,8 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
         }
         .telegram-link {
             display: block;
@@ -40,6 +70,7 @@
             font-weight: bold;
             margin-top: 15px;
             text-align: center;
+            transition: background-color 0.3s;
         }
         .telegram-link:hover {
             background-color: #006699;
@@ -48,16 +79,17 @@
             font-size: 18px;
             color: #333;
             margin: 0;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="channel-info">
         <div class="container">
-            <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="Real APK Logo" class="logo">
+            <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="REAL APK Logo" class="logo">
             <h1>📍 REAL APK 📍</h1>
         </div>
-        <a href="https://telegram.me/+XV_ACs3IWgoxMmI1" class="telegram-link">Join Telegram Channel</a>
+        <a href="https://t.me/+XV_ACs3IWgoxMmI1" class="telegram-link">Join Telegram Channel</a>
     </div>
 </body>
 </html>
