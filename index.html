@@ -16,7 +16,7 @@
         
         .channel-info {
             background-color: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
@@ -47,7 +47,6 @@
         .container {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
         }
         .logo {
             width: 60px;
@@ -56,29 +55,21 @@
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .btn {
+        .telegram-link {
             display: block;
+            background-color: #0088cc;
             color: white;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 8px 15px;
             border-radius: 5px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
             text-align: center;
-            transition: all 0.3s;
+            transition: background-color 0.3s;
             cursor: pointer;
         }
-        .btn-telegram {
-            background-color: #0088cc;
-        }
-        .btn-telegram:hover {
+        .telegram-link:hover {
             background-color: #006699;
-        }
-        .btn-app {
-            background-color: #34b7f1;
-        }
-        .btn-app:hover {
-            background-color: #0095eb;
         }
         h1 {
             font-size: 18px;
@@ -88,32 +79,15 @@
         }
     </style>
     <script>
-        function openInChrome() {
-            const url = "tg://join?invite=ylnL4bR-7gg5ZTA1";
-            
-            if (/android/i.test(navigator.userAgent)) {
-                window.location.href = `intent:${url}#Intent;package=com.android.chrome;end`;
-                setTimeout(() => { window.location.href = url; }, 200);
-            } 
-            else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-                window.location.href = `googlechromes://${url}`;
-                setTimeout(() => { window.location.href = url; }, 200);
-            }
-            else {
-                window.open(url, "_blank");
-            }
-            return false;
-        }
-        
-        function openInTelegramApp() {
+        function openTelegram() {
             const appUrl = "tg://join?invite=ylnL4bR-7gg5ZTA1";
-            const webUrl = "tg://join?invite=ylnL4bR-7gg5ZTA1";
+            const webUrl = "https://t.me/aboutofhcs";
             
-            // Try to open Telegram app
+            // Try to open Telegram app directly
             window.location.href = appUrl;
             
-            // Fallback to web if app not installed
-            setTimeout(() => {
+            // Fallback to web version if app not installed
+            setTimeout(function() {
                 if (!document.hidden) {
                     window.location.href = webUrl;
                 }
@@ -129,8 +103,7 @@
             <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="REAL APK Logo" class="logo">
             <h1>📍 REAL APK 📍</h1>
         </div>
-        <a class="btn btn-telegram" onclick="openInChrome()">Join in Browser</a>
-        <a class="btn btn-app" onclick="openInTelegramApp()">Open in Telegram App</a>
+        <a class="telegram-link" onclick="openTelegram()">Join Telegram Channel</a>
     </div>
 </body>
 </html>
