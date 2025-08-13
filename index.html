@@ -66,6 +66,7 @@
             margin-top: 15px;
             text-align: center;
             transition: background-color 0.3s;
+            cursor: pointer;
         }
         .telegram-link:hover {
             background-color: #006699;
@@ -78,11 +79,25 @@
         }
     </style>
     <script>
-        function openTelegram() {
+        function openInChrome() {
             // Force open in browser by using the web version URL
-            window.location.href = "https://web.telegram.org/k/#@RealApk";
-            // Or use the direct link with web redirect
-            // window.open("https://t.me/+XV_ACs3IWgoxMmI1", "_blank");
+            const url = "https://t.me/+XV_ACs3IWgoxMmI1";
+            
+            // For Android devices
+            if (/android/i.test(navigator.userAgent)) {
+                window.open(url, "_blank");
+                return false;
+            }
+            // For iOS devices
+            else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+                window.open(url, "_blank");
+                return false;
+            }
+            // For desktop browsers
+            else {
+                window.open(url, "_blank");
+                return false;
+            }
         }
     </script>
 </head>
@@ -92,7 +107,7 @@
             <img src="https://i.ibb.co/fGZz2XHd/IMG-20250807-004055-ezgif-com-image-to-datauri-converter.png" alt="REAL APK Logo" class="logo">
             <h1>📍 REAL APK 📍</h1>
         </div>
-        <a href="https://web.telegram.org/k/#@RealApk" onclick="openTelegram(); return false;" class="telegram-link">Join Telegram Channel</a>
+        <a class="telegram-link" onclick="openInChrome()">Join Telegram Channel</a>
     </div>
 </body>
 </html>
