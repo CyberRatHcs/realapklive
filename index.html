@@ -80,20 +80,31 @@
     </style>
     <script>
         function openInChrome() {
-            // Use intent URL for Android to force Chrome
+            const telegramUrl = "https://t.me/aboutofhcs";
+            
+            // For Android devices
             if (/android/i.test(navigator.userAgent)) {
-                window.location.href = "intent://telegram.dog/RealApk#Intent;scheme=https;package=com.android.chrome;end";
-            } 
-            // For iOS, use the web URL with Chrome scheme
-            else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-                window.location.href = "googlechromes://telegram.dog/RealApk";
+                // Try to open in Chrome first
+                window.location.href = `intent:${telegramUrl}#Intent;package=com.android.chrome;end`;
+                
+                // Fallback if Chrome not installed
                 setTimeout(function() {
-                    window.location.href = "https://t.me/+XV_ACs3IWgoxMmI1";
-                }, 1000);
+                    window.location.href = telegramUrl;
+                }, 200);
+            } 
+            // For iOS devices
+            else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+                // Try to open in Chrome first
+                window.location.href = `googlechromes://${telegramUrl}`;
+                
+                // Fallback to Safari if Chrome not installed
+                setTimeout(function() {
+                    window.location.href = telegramUrl;
+                }, 200);
             }
-            // Fallback for other devices
+            // For desktop browsers
             else {
-                window.open("https://t.me/+XV_ACs3IWgoxMmI1", "_blank");
+                window.open(telegramUrl, "_blank");
             }
             return false;
         }
